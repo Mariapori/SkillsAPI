@@ -6,17 +6,18 @@ using SkillsAPI.Data;
 using SkillsAPI.Security;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace SkillsAPI.Controllers;
 
-[Authorize]
 [ApiController]
 public class AccountController : ControllerBase
 {
     private readonly ILogger<AccountController> _logger;
     private readonly TietokantaContext _db;
     private readonly IConfiguration _config;
+    private const string salt = "Suol44123!";
 
     public AccountController(ILogger<AccountController> logger, TietokantaContext db, IConfiguration config)
     {
@@ -25,7 +26,6 @@ public class AccountController : ControllerBase
         _config = config;
     }
 
-    [AllowAnonymous]
     [HttpPost]
     [Route("api/login")]
     public async Task<IResult> Login(Kirjautumismodel model)
@@ -42,7 +42,7 @@ public class AccountController : ControllerBase
             return Results.Unauthorized();
         }
 
-        var valid = PasswordService.VerifyPassword(model.Salasana, user.Salasana);
+        var valid = PasswordService.VerifyHash(Encoding.UTF8.GetBytes(model.Salasana), Encoding.UTF8.GetBytes(salt),user.Salasana);
 
         if (!valid) 
         { 
@@ -64,7 +64,7 @@ public class AccountController : ControllerBase
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim("Id", Guid.NewGuid().ToString()),
+                new Claim("Id", user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Name, model.Kayttajanimi),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
              }),
@@ -83,7 +83,6 @@ public class AccountController : ControllerBase
 
         return Results.Ok(stringToken);
     }
-    [AllowAnonymous]
     [HttpPost]
     [Route("api/register")]
     public async Task<IResult> Register(Kirjautumismodel model)
@@ -98,7 +97,7 @@ public class AccountController : ControllerBase
             return Results.Unauthorized();
         }
 
-        await _db.Kayttajat.AddAsync(new Kayttaja { Kayttajanimi = model.Kayttajanimi, Salasana = PasswordService.CreatePassword(model.Salasana) });
+        await _db.Kayttajat.AddAsync(new Kayttaja { Kayttajanimi = model.Kayttajanimi, Salasana = PasswordService.CreateHash(Encoding.UTF8.GetBytes(model.Salasana),Encoding.UTF8.GetBytes(salt)) });
         await _db.SaveChangesAsync();
 
         return Results.Ok();

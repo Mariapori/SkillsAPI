@@ -1,4 +1,5 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using SkillsAPI.Data;
 namespace SkillsAPI.Data;
     public class TietokantaContext : DbContext
     {
@@ -10,5 +11,8 @@ namespace SkillsAPI.Data;
     
 
         public virtual DbSet<Kayttaja> Kayttajat { get; set; } = null!;
+    
+
+        public DbSet<SkillsAPI.Data.Experience> Experience { get; set; } = default!;
 
     }
