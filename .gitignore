@@ -7,3 +7,5 @@
 /obj/Release/net7.0
 /SkillsAPI.csproj.user
 /obj
+.vscode/launch.json
+.vscode/tasks.json
