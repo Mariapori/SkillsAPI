@@ -10,7 +10,7 @@ namespace SkillsAPI.Data;
         protected TietokantaContext(){}
     
 
-        public virtual DbSet<Kayttaja> Kayttajat { get; set; } = null!;
+        public DbSet<Kayttaja> Kayttajat { get; set; } = default!;
     
 
         public DbSet<SkillsAPI.Data.Experience> Experience { get; set; } = default!;
