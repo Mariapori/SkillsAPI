@@ -65,7 +65,8 @@ public class AccountController : ControllerBase
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim("Id", user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Name, model.Kayttajanimi),
+                new Claim(ClaimTypes.Name,user.Kayttajanimi),
+                new Claim(JwtRegisteredClaimNames.Name, user.Kayttajanimi),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
              }),
             Expires = DateTime.UtcNow.AddMinutes(30),
