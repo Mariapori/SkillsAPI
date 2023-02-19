@@ -67,7 +67,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddCors(pBuilder =>
     pBuilder.AddPolicy("default", pcy =>
-        pcy.WithOrigins("https://mariapori.fi")
+        pcy.WithOrigins("https://mariapori.fi","http://localhost:3000")
         .SetIsOriginAllowedToAllowWildcardSubdomains()
         .AllowAnyMethod()
         .AllowAnyHeader())
