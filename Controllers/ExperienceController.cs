@@ -39,8 +39,8 @@ namespace SkillsAPI.Controllers
                     Id = item.Id,
                     Organization = item.Organization,
                     Role = item.Role,
-                    Start = item.Start,
-                    End = item.End,
+                    Start = item.Start.Date,
+                    End = item.End.HasValue ? item.End.Value.Date : null,
                     Description = item.Description
                 });
             }
