@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SkillsAPI.Data;
@@ -21,6 +22,18 @@ namespace SkillsAPI.Controllers
         public ExperienceController(TietokantaContext context)
         {
             _context = context;
+        }
+
+        [HttpGet("GetExperinceYears")]
+        [AllowAnonymous]
+        public async Task<IResult> GetExperinceYears(string user)
+        {
+            var result = await _context.Kayttajat.Include(o => o.Experience).FirstOrDefaultAsync(o => o.Kayttajanimi == user);
+            if (result == null)
+            {
+                return Results.NotFound();
+            }
+            return Results.Ok(result.KokemusInYears);
         }
 
         [HttpGet]
