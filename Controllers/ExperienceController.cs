@@ -33,7 +33,7 @@ namespace SkillsAPI.Controllers
             {
                 return Results.NotFound();
             }
-            return Results.Ok(result.KokemusInYears);
+            return Results.Ok(new { Years = result.KokemusInYears });
         }
 
         [HttpGet]
