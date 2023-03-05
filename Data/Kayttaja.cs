@@ -10,16 +10,15 @@ namespace SkillsAPI.Data;
     public byte[] Salasana {get;set;} = null!;
     public virtual ICollection<Experience> Experience { get;set;} = new List<Experience>();
 
-    public int KokemusInYears {
+    public decimal KokemusInYears {
         get
         {
-            int years = 0;
-            var zeroTime = new DateTime(1, 1, 1);
+            decimal years = 0;
             foreach (var experience in this.Experience)
             {
-                years += (zeroTime + experience.GetDuration()).Year - 1;
+                years += (decimal)(experience.GetDuration().TotalDays / 365.2425);
             }
-            return years;
+            return Math.Round(years,2);
         }
     }
 
