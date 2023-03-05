@@ -24,18 +24,6 @@ namespace SkillsAPI.Controllers
             _context = context;
         }
 
-        [HttpGet("GetExperinceYears")]
-        [AllowAnonymous]
-        public async Task<IResult> GetExperinceYears(string user)
-        {
-            var result = await _context.Kayttajat.Include(o => o.Experience).FirstOrDefaultAsync(o => o.Kayttajanimi == user);
-            if (result == null)
-            {
-                return Results.NotFound();
-            }
-            return Results.Ok(new { Years = result.KokemusInYears });
-        }
-
         [HttpGet]
         [AllowAnonymous]
         public async Task<IResult> GetExperienceByUser(string user)
@@ -45,6 +33,7 @@ namespace SkillsAPI.Controllers
                 return Results.NotFound();
             }
             var expList = new List<ExperienceModel>();
+            var result2 = await _context.Kayttajat.Include(o => o.Experience).FirstOrDefaultAsync(o => o.Kayttajanimi == user);
 
             foreach (var item in results.OrderByDescending(o => o.Start))
             {
@@ -57,7 +46,7 @@ namespace SkillsAPI.Controllers
                     Description = item.Description
                 });
             }
-            return Results.Ok(expList);
+            return Results.Ok(new { Experiences = expList, ExperienceYears = result2?.KokemusInYears ?? 0 });
         }
 
         [HttpPost]
