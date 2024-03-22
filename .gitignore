@@ -3,8 +3,8 @@
 ################################################################################
 
 /.vs
-/bin/Debug/net7.0
-/obj/Release/net7.0
+/bin/
+/obj/
 /SkillsAPI.csproj.user
 /obj
 .vscode/launch.json
